@@ -87,6 +87,24 @@ Node *inserir_raiz(Node *raiz,int chave){
 			raiz = criaNo(chave);
 		}else if(chave != raiz->chave){
 			int dir = raiz->chave < chave; //Determina direção a ser inserida. 1 = direita; 0 = esquerda
+			
+			raiz->prox[dir] = inserir_raiz(raiz->prox[dir],chave);
+			
+			if(e_verm(raiz->prox[dir])){
+				if(e_verm(raiz->prox[!dir])){
+					//Caso 1
+					raiz->verm = 1;
+					raiz->prox[0]->verm = 0;
+					raiz->prox[1]->verm = 0;
+				}else{
+					//Casos 2 e 3
+					if(e_verm(raiz->prox[dir]->prox[dir])){
+						raiz = rt_simples(raiz,!dir);
+					}else if(e_verm(raiz->prox[dir]->prox[!dir])){
+						raiz->rt_dup(raiz,!dir);
+					}
+				}
+			}
 		}
 		return raiz;
 	}
