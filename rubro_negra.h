@@ -109,7 +109,7 @@ Node *inserir_raiz(Node *raiz,int chave){
 		return raiz;
 	}
 
-int inserir(Arv *avre, int chave){
+int inserir(Arv **avre, int chave){
 		avre->raiz = inserir_raiz(avre->raiz,chave);
 		avre->raiz->verm = 0;
 		
