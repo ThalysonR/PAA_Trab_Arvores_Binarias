@@ -8,7 +8,7 @@ typedef struct node{
 	}Node;
 	
 typedef struct arv{
-	struct arv *raiz;
+	struct node *raiz;
 	}Arv;
 	
 int e_verm(Node *raiz){
