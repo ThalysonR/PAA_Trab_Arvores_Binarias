@@ -5,11 +5,10 @@
 int main()
 {
 	Arv *rb = inicializArv();
-	if(inserir(rb,5)){
-	printf("Sucexo! -> %d",rb->raiz->chave);
+	for(int i = 10; i>0; i--){
+		inserir(rb,i);
 	}
-	else
-	puts("Falhou!");
+	imprimir(rb);
 	return 0;
 }
 

@@ -89,6 +89,20 @@ Arv *inicializArv(){
 		avre->raiz = NULL;
 		return avre;
 	}
+	
+	
+void imprimeArv(Node *raiz){
+		if(raiz->prox[0] != NULL)
+		imprimeArv(raiz->prox[0]);
+		printf("(%d)",raiz->chave);
+		if(raiz->prox[1] != NULL)
+		imprimeArv(raiz->prox[1]);
+	}
+	
+void imprimir(Arv *avre){
+		if(avre->raiz != NULL)
+		imprimeArv(avre->raiz);
+	}
 
 Node *inserir_raiz(Node *raiz,int chave){
 		if(raiz == NULL){
