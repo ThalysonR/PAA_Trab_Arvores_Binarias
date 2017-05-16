@@ -23,6 +23,8 @@ Node *rt_simples(Node *raiz,int dir){
 		
 		raiz->verm = 1;
 		aux->verm = 0;
+		
+		return aux;
 	}
 	
 Node *rt_dup(Node *raiz,int dir){
@@ -53,7 +55,7 @@ int rn_validar(Node *raiz){
 			//Árvore de busca binária inválida
 			if((n_esq != NULL && n_esq->chave >= raiz->chave) || (n_dir != NULL && n_dir->chave <= raiz->chave)){
 				puts("Violação: Árvore Binária inválida.");
-				return ;
+				return 0;
 			}
 			
 			//Altura preta diferente
@@ -81,6 +83,12 @@ Node *criaNo(int chave){
 		}
 		return nv;
 	}
+	
+Arv *inicializArv(){
+		Arv *avre = malloc(sizeof *avre);
+		avre->raiz = NULL;
+		return avre;
+	}
 
 Node *inserir_raiz(Node *raiz,int chave){
 		if(raiz == NULL){
@@ -101,7 +109,7 @@ Node *inserir_raiz(Node *raiz,int chave){
 					if(e_verm(raiz->prox[dir]->prox[dir])){
 						raiz = rt_simples(raiz,!dir);
 					}else if(e_verm(raiz->prox[dir]->prox[!dir])){
-						raiz->rt_dup(raiz,!dir);
+						raiz = rt_dup(raiz,!dir);
 					}
 				}
 			}
@@ -109,7 +117,7 @@ Node *inserir_raiz(Node *raiz,int chave){
 		return raiz;
 	}
 
-int inserir(Arv **avre, int chave){
+int inserir(Arv *avre, int chave){
 		avre->raiz = inserir_raiz(avre->raiz,chave);
 		avre->raiz->verm = 0;
 		
