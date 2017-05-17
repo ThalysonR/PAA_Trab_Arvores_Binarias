@@ -9,13 +9,7 @@ typedef struct node{
 	
 typedef struct arv{
 	struct node *raiz;
-	}Arv;
-	
-	
-Node *remove_balanceia(Node *raiz,int dir,int *feito);
-	
-	
-	
+	}Arv;	
 	
 int e_verm(Node *raiz){
 		return raiz != NULL && raiz->verm == 1;
@@ -184,12 +178,13 @@ Node *remove_balanceia(Node *raiz,int dir,int *feito){
 		return raiz;
 	}
 	
-Node *remover_raiz(Node *raiz, int chave, int *feito){
+Node *remover_raiz(Node *raiz, int chave, int *feito,int *achou){
 		if(raiz == NULL){
 			*feito = 1;
 		}else{
 			int dir;
 			if(raiz->chave == chave){
+				*achou = 1;
 				if(raiz->prox[0] == NULL || raiz->prox[1] == NULL){
 					Node *aux = raiz->prox[raiz->prox[0] == NULL];
 					
@@ -214,7 +209,7 @@ Node *remover_raiz(Node *raiz, int chave, int *feito){
 				}
 			}
 			dir = raiz->chave < chave;
-			raiz->prox[dir] = remover_raiz(raiz->prox[dir],chave,feito);
+			raiz->prox[dir] = remover_raiz(raiz->prox[dir],chave,feito,achou);
 			
 			if(!*feito){
 				raiz = remove_balanceia(raiz,dir,feito);
@@ -224,9 +219,15 @@ Node *remover_raiz(Node *raiz, int chave, int *feito){
 	}
 	
 int remover(Arv *avre,int chave){
-		int feito = 0;
+		int feito = 0,achou = 0;
 		
-		avre->raiz = remover_raiz(avre->raiz,chave,&feito);
+		avre->raiz = remover_raiz(avre->raiz,chave,&feito,&achou);
+		
+		if(achou){
+			printf("%d removido.",chave);
+		}else{
+			printf("%d nao encontrado.",chave);
+		}
 		
 		if(avre->raiz != NULL){
 			avre->raiz->verm = 0;
@@ -234,6 +235,20 @@ int remover(Arv *avre,int chave){
 		return 1;
 	}
 	
-
+void buscar(Arv *avre, int chave){
+		Node *aux = avre->raiz;
+		int achou = 0, dir = aux->chave < chave;
+		while(!achou && aux != NULL){
+			if(aux->chave == chave){
+				achou = 1;
+				printf("%d encontrado.\n",chave);
+			}else{
+				dir = aux->chave < chave;
+				aux = aux->prox[dir];
+			}
+		}
+		if(!achou)
+		printf("%d nao encontrado.\n",chave);
+	}
 
 #endif
