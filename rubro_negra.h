@@ -95,6 +95,7 @@ void imprimeArv(Node *raiz){
 		if(raiz->prox[0] != NULL)
 		imprimeArv(raiz->prox[0]);
 		printf("(%d)",raiz->chave);
+		printf("(%c)\n",raiz->verm? 'v':'p');
 		if(raiz->prox[1] != NULL)
 		imprimeArv(raiz->prox[1]);
 	}
@@ -138,4 +139,93 @@ int inserir(Arv *avre, int chave){
 		return 1;
 	}
 	
+Node *remover_raiz(Node *raiz, int chave, int *feito){
+		if(raiz == NULL){
+			*feito = 1;
+		}else{
+			int dir;
+			if(raiz->chave == chave){
+				if(raiz->prox[0] == NULL || raiz->prox[1] == NULL){
+					Node *aux = raiz->prox[raiz->prox[0] == NULL];
+					
+					//Caso 0
+					if(e_verm(raiz)){
+						*feito = 1;
+					}else if(e_verm(aux)){
+						aux->verm = 0;
+						*feito = 1;
+					}
+					free(raiz);
+					
+					return aux;
+				}else{
+					Node *sucessor = raiz->prox[0];
+					
+					while(sucessor->prox[1] != NULL){
+						sucessor = sucessor->prox[1];
+					}
+					raiz->chave = sucessor->chave;
+					chave = sucessor->chave;
+				}
+			}
+			dir = raiz->chave < chave;
+			raiz->prox[dir] = remover_raiz(raiz->prox[dir],chave,feito);
+			
+			if(!*feito){
+				raiz = remove_balanceia(raiz,dir,feito);
+			}
+		}
+		return raiz;
+	}
+	
+int remove(Arv *avre,int chave){
+		int feito = 0;
+		
+		avre->raiz = remove_raiz(avre->raiz,chave,&feito);
+		
+		if(avre->raiz != NULL){
+			avre->raiz->verm = 0;
+		}
+		return 1;
+	}
+	
+Node *remove_balanceia(Node *raiz,int dir,int *feito){
+		Node *p = raiz;
+		Node *s = raiz->prox[!dir];
+		
+		if(e_verm(s)){
+			raiz->rt_simples(raiz,dir);
+			s = p->prox[!dir];
+		}
+		if(s != NULL){
+			if(!e_verm(s->prox[0]) && !e_verm(s->prox[1])){
+				if(e_verm(p)){
+					*feito = 1;
+				}
+				p->verm = 0;
+				s->verm = 1;
+			}else{
+				int aux = p->verm;
+				int nova_raiz = (raiz == p);
+				
+				if(e_verm(s->prox[!dir])){
+					p = rt_simples(p,dir);
+				}else{
+					p = rt_dup(p,dir);
+				}
+				p->verm = aux;
+				p->prox[0]->verm = 0;
+				p->prox[1]->verm = 0;
+				
+				if(nova_raiz){
+					raiz = p;
+				}else{
+					raiz->prox[dir] = p;
+				}
+				*feito = 1;
+			}
+		}
+		return raiz;
+	}
+
 #endif

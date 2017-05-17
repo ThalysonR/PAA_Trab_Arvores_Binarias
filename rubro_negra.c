@@ -9,6 +9,7 @@ int main()
 		inserir(rb,i);
 	}
 	imprimir(rb);
+	rn_validar(rb->raiz);
 	return 0;
 }
 
