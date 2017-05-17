@@ -10,6 +10,12 @@ int main()
 	}
 	imprimir(rb);
 	rn_validar(rb->raiz);
+	printf("\n\n\n");
+	for(int i = 10;i>0; i = i-3){
+		remover(rb,i);
+	}
+	imprimir(rb);
+	rn_validar(rb->raiz);
 	return 0;
 }
 

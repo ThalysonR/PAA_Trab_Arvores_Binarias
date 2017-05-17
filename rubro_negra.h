@@ -11,6 +11,12 @@ typedef struct arv{
 	struct node *raiz;
 	}Arv;
 	
+	
+Node *remove_balanceia(Node *raiz,int dir,int *feito);
+	
+	
+	
+	
 int e_verm(Node *raiz){
 		return raiz != NULL && raiz->verm == 1;
 	}
@@ -139,6 +145,45 @@ int inserir(Arv *avre, int chave){
 		return 1;
 	}
 	
+Node *remove_balanceia(Node *raiz,int dir,int *feito){
+		Node *p = raiz;
+		Node *s = raiz->prox[!dir];
+		
+		if(e_verm(s)){
+			raiz = rt_simples(raiz,dir);
+			s = p->prox[!dir];
+		}
+		if(s != NULL){
+			if(!e_verm(s->prox[0]) && !e_verm(s->prox[1])){
+				if(e_verm(p)){
+					*feito = 1;
+				}
+				p->verm = 0;
+				s->verm = 1;
+			}else{
+				int aux = p->verm;
+				int nova_raiz = (raiz == p);
+				
+				if(e_verm(s->prox[!dir])){
+					p = rt_simples(p,dir);
+				}else{
+					p = rt_dup(p,dir);
+				}
+				p->verm = aux;
+				p->prox[0]->verm = 0;
+				p->prox[1]->verm = 0;
+				
+				if(nova_raiz){
+					raiz = p;
+				}else{
+					raiz->prox[dir] = p;
+				}
+				*feito = 1;
+			}
+		}
+		return raiz;
+	}
+	
 Node *remover_raiz(Node *raiz, int chave, int *feito){
 		if(raiz == NULL){
 			*feito = 1;
@@ -178,10 +223,10 @@ Node *remover_raiz(Node *raiz, int chave, int *feito){
 		return raiz;
 	}
 	
-int remove(Arv *avre,int chave){
+int remover(Arv *avre,int chave){
 		int feito = 0;
 		
-		avre->raiz = remove_raiz(avre->raiz,chave,&feito);
+		avre->raiz = remover_raiz(avre->raiz,chave,&feito);
 		
 		if(avre->raiz != NULL){
 			avre->raiz->verm = 0;
@@ -189,43 +234,6 @@ int remove(Arv *avre,int chave){
 		return 1;
 	}
 	
-Node *remove_balanceia(Node *raiz,int dir,int *feito){
-		Node *p = raiz;
-		Node *s = raiz->prox[!dir];
-		
-		if(e_verm(s)){
-			raiz->rt_simples(raiz,dir);
-			s = p->prox[!dir];
-		}
-		if(s != NULL){
-			if(!e_verm(s->prox[0]) && !e_verm(s->prox[1])){
-				if(e_verm(p)){
-					*feito = 1;
-				}
-				p->verm = 0;
-				s->verm = 1;
-			}else{
-				int aux = p->verm;
-				int nova_raiz = (raiz == p);
-				
-				if(e_verm(s->prox[!dir])){
-					p = rt_simples(p,dir);
-				}else{
-					p = rt_dup(p,dir);
-				}
-				p->verm = aux;
-				p->prox[0]->verm = 0;
-				p->prox[1]->verm = 0;
-				
-				if(nova_raiz){
-					raiz = p;
-				}else{
-					raiz->prox[dir] = p;
-				}
-				*feito = 1;
-			}
-		}
-		return raiz;
-	}
+
 
 #endif
