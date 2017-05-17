@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "rubro_negra.h"
 
-int main()
+int main(int argc, char **argv)
 {
 	Arv *rb = inicializArv();
 	for(int i = 10; i>0; i--){
