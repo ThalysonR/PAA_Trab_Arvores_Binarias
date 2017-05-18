@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <time.h>
 #include "rubro_negra.h"
 
@@ -33,7 +32,7 @@ void tempos(Arv *rb,int n,int testes){
 		}
 		t[0] = clock() - t[0];
 		execucao(t[0],"insercao");
-		
+		system("PAUSE");
 		for(int i = 0; i < testes; i++){
 		//BUSCA EXISTENTE
 		t[1] = clock();
