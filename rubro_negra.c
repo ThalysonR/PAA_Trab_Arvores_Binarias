@@ -18,7 +18,7 @@ void tempos(Arv *rb,int n,int testes){
 	int estatico[testes], contador = 89;
 	for(int i = 0; i < testes; i++){
 		estatico[i] = contador;
-		contador += rand() % 65536;
+		contador += aleatorio();
 	}
 	
 	
