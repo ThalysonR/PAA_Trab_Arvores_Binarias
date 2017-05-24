@@ -105,13 +105,14 @@ void imprimir(Arv *avre){
 		imprimeArv(avre->raiz);
 	}
 
-Node *inserir_raiz(Node *raiz,int chave){
+Node *inserir_raiz(Node *raiz,int chave,int *novo){
 		if(raiz == NULL){
 			raiz = criaNo(chave);
+			*novo = 1;
 		}else if(chave != raiz->chave){
 			int dir = raiz->chave < chave; //Determina direção a ser inserida. 1 = direita; 0 = esquerda
 			
-			raiz->prox[dir] = inserir_raiz(raiz->prox[dir],chave);
+			raiz->prox[dir] = inserir_raiz(raiz->prox[dir],chave,novo);
 			
 			if(e_verm(raiz->prox[dir])){
 				if(e_verm(raiz->prox[!dir])){
@@ -133,12 +134,24 @@ Node *inserir_raiz(Node *raiz,int chave){
 	}
 
 int inserir(Arv *avre, int chave){
-		avre->raiz = inserir_raiz(avre->raiz,chave);
+		int novo = 0;
+		avre->raiz = inserir_raiz(avre->raiz,chave,&novo);
 		avre->raiz->verm = 0;
 		
-		return 1;
+		return novo;
 	}
 	
+int contArv(Node *raiz){
+		if(raiz == NULL)
+		return 0;
+		int esq = 0,dir = 0;
+		
+		esq = contArv(raiz->prox[0]);
+		dir = contArv(raiz->prox[1]);
+		
+		return esq+dir+1;		
+	}
+		
 Node *remove_balanceia(Node *raiz,int dir,int *feito){
 		Node *p = raiz;
 		Node *s = raiz->prox[!dir];

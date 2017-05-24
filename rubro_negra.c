@@ -3,8 +3,8 @@
 #include <time.h>
 #include "rubro_negra.h"
 
-int aleatorio(){
-		return rand() % 65536;
+int aleatorio(int n){
+		return rand() % n*10;
 	}
 
 void execucao(clock_t t,char op[20]){
@@ -12,27 +12,47 @@ void execucao(clock_t t,char op[20]){
 		printf("Tempo de %s: %.4f segundos\n",op,tempo_exec);
 	}
 
+void insere_certo(Arv *rb,Node *raiz){
+		if(raiz->prox[0] != NULL)
+		insere_certo(rb,raiz->prox[0]);
+		inserir(rb,raiz->chave);
+		if(raiz->prox[1] != NULL)
+		insere_certo(rb,raiz->prox[1]);
+	}
+
 void tempos(Arv *rb,int n,int testes){
 	clock_t t[5];
-	int estatico[testes], contador = 89;
-	for(int i = 0; i < testes; i++){
+	int estatico[testes], contador = 89,i = 0;
+	Arv *aux = inicializArv();
+	
+	
+	printf("Tratando repeticoes...");
+	for(i = 0; i < testes; i++){
 		estatico[i] = contador;
-		contador += aleatorio();
+		contador += aleatorio(n);
 	}
 	
 	
-		//INSERCAO
-		t[0] = clock();
-		for(int i = 0; i < testes; i++){
-			inserir(rb,estatico[i]);
+		
+		for(i = 0; i < testes; i++){
+			inserir(aux,estatico[i]);
 		}
 		
-		for(int i = 0; i < n-testes; i++){
-			inserir(rb,aleatorio());
+		for(i = 0; i < n-testes; i++){
+			if(!inserir(aux,aleatorio(n))){
+				i--;
+			}
 		}
+		printf("Pressione enter:");
+		getchar();
+		
+		//INSERCAO
+		t[0] = clock();
+		insere_certo(rb,aux->raiz);		
 		t[0] = clock() - t[0];
 		execucao(t[0],"insercao");
-		system("PAUSE");
+		printf("Numero de nos: %d\nPressione enter:",contArv(rb->raiz));
+		getchar();
 		for(int i = 0; i < testes; i++){
 		//BUSCA EXISTENTE
 		t[1] = clock();
@@ -42,7 +62,7 @@ void tempos(Arv *rb,int n,int testes){
 		
 		//BUSCA NAO EXISTENTE
 		t[2] = clock();
-		buscar(rb,65536);
+		buscar(rb,n*10+1);
 		t[2] = clock() - t[2];
 		execucao(t[2],"busca nao existente");
 		
@@ -54,11 +74,13 @@ void tempos(Arv *rb,int n,int testes){
 		
 		//REMOCAO NAO EXISTENTE
 		t[4] = clock();
-		remover(rb,65536);
+		remover(rb,n*10+1);
 		t[4] = clock() - t[4];
 		execucao(t[4],"remocao nao existente");
 		printf("\n\n\n");
 		}
+		rn_validar(rb->raiz);
+		printf("Numero de nos: %d\n",contArv(rb->raiz));
 	}
 
 int main(int argc, char **argv)
