@@ -2,9 +2,10 @@
 #include <stdlib.h>
 #include <time.h>
 #include "rubro_negra.h"
+#define rnd_max 30000
 
 int aleatorio(int n){
-		return rand() % n*10;
+		return rand() % n;
 	}
 
 void execucao(clock_t t,char op[20]){
@@ -29,26 +30,37 @@ void tempos(Arv *rb,int n,int testes){
 	printf("Tratando repeticoes...");
 	for(i = 0; i < testes; i++){
 		estatico[i] = contador;
-		contador += aleatorio(n);
+		if( n < rnd_max)
+			contador += aleatorio(n*10);
+		else
+			contador += aleatorio(n);
 	}
 	
-	
+		if(n < rnd_max){
+			
 		
-		for(i = 0; i < testes; i++){
-			inserir(aux,estatico[i]);
-		}
-		
-		for(i = 0; i < n-testes; i++){
-			if(!inserir(aux,aleatorio(n))){
-				i--;
+			for(i = 0; i < testes; i++){
+				inserir(aux,estatico[i]);
+			}
+			
+			for(i = 0; i < n-testes; i++){
+				if(!inserir(aux,aleatorio(n))){
+					i--;
+				}
 			}
 		}
+		
 		printf("Pressione enter:");
 		getchar();
 		
 		//INSERCAO
 		t[0] = clock();
-		insere_certo(rb,aux->raiz);		
+		if(n < rnd_max)
+			insere_certo(rb,aux->raiz);
+		else
+			for(i = 0; i < n; i++){
+				inserir(rb,i);
+			}
 		t[0] = clock() - t[0];
 		execucao(t[0],"insercao");
 		printf("Numero de nos: %d\nPressione enter:",contArv(rb->raiz));
